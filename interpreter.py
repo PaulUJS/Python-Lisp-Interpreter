@@ -6,13 +6,25 @@ List = list
 Exp = (Atom, List)
 Env = dict
 
-arr = []
+tokens = []
 
-def read_contents():
+def read_contents() -> str:
     prog_file = open("test.txt", "r")
     res = prog_file.readlines()
     listToStr = ' '.join([str(elem) for elem in res])
     tokenize(listToStr)
+
+def num_match(num: str) -> bool:
+    nums = {'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+    if nums.get(num):
+        return True
+    return False
+
+def op_match(op: str) -> str:
+    ops = {'+': 'Plus', '-': 'Minus', '*': 'Star', '/': 'Slash'}
+    if ops.get(op):
+        #add_token(ops.get(op))
+        return ops.get(op)
 
 def tokenize(chars: str) -> list:
     #chars.replace('(', ' ( ').replace(')', ' ) ').split()
@@ -22,21 +34,33 @@ def tokenize(chars: str) -> list:
             add_token('LeftParen')
         elif c ==')':
             add_token('RighParen')
-        elif c == '+':
-            add_token('Plus')
-        elif c == '-':
-            add_token('Minus')
-        elif c == '*':
-            add_token('Star')
-        elif c == '/':
-            add_token('Slash')
-        elif c == 'define':
-            add_token('Define')
+        elif num_match(c):
+            add_token(c)
+        elif op_match(c): 
+            add_token(op_match(c))
+    print(tokens)
 
 def add_token(token: str) -> list:
-    arr.append(token)
-    print(arr)
-    return arr
+    tokens.append(token)
+    return tokens
+
+def evaluate():
+    ops = {
+            'Plus': lambda x, y: print(x + y),
+            'Minus': lambda x, y: print(x - y),
+            'Star': lambda x, y: print(x * y),
+            'Slash': lambda x, y: print(x / y)
+          }
+    op = ''
+    num = []
+    for i in tokens:
+        if len(num) != 2:
+            if ops.get(i):
+                op = i
+            if num_match(i):
+                num.append(int(i))   
+    ops[op](num[0], num[1])
 
 
 read_contents()
+evaluate()

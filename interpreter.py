@@ -58,8 +58,11 @@ def evaluate():
             if ops.get(i):
                 op = i
             if num_match(i):
-                num.append(int(i))   
-    ops[op](num[0], num[1])
+                num.append(int(i))
+        else:  
+            ops[op](num[0], num[1])
+            num.clear()
+            op = ''
 
 
 read_contents()
